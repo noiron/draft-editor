@@ -4,6 +4,7 @@ import {
 } from 'draft-js';
 import styled from 'styled-components';
 import 'draft-js/dist/Draft.css';
+import ToolBar from './components/tool-bar';
 
 const Container = styled.div`
   margin: 20px auto;
@@ -33,10 +34,22 @@ class MyEditor extends React.PureComponent {
     this.setState({ editorState });
   }
 
+  _onBoldClick = () => {
+    console.log('Click on bold');
+  }
+
+  _onLinkClick = () => {
+    console.log('Click on link');
+  }
+
 
   render() {
     return (
       <Container>
+        <ToolBar
+          onBoldClick={this._onBoldClick}
+          onLinkClick={this._onLinkClick}
+        />
 
         <EditorBox>
           <Editor
