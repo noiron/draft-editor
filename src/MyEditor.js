@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Editor, EditorState,
+  Editor, EditorState, RichUtils
 } from 'draft-js';
 import styled from 'styled-components';
 import 'draft-js/dist/Draft.css';
@@ -30,18 +30,27 @@ class MyEditor extends React.PureComponent {
     }
   }
 
+  componentDidMount() {
+    this.focus();
+  }
+
+  setDomEditorRef = ref => this.domEditor = ref;
+
+  focus = () => {
+    this.domEditor.focus();
+  }
+
   onChange = (editorState) => {
     this.setState({ editorState });
   }
 
   _onBoldClick = () => {
-    console.log('Click on bold');
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
   }
 
   _onLinkClick = () => {
     console.log('Click on link');
   }
-
 
   render() {
     return (
@@ -55,6 +64,8 @@ class MyEditor extends React.PureComponent {
           <Editor
             editorState={this.state.editorState}
             onChange={this.onChange}
+            placeholder="Please input here..."
+            ref={this.setDomEditorRef}
           />
         </EditorBox>
       </Container>
