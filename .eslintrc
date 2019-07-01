@@ -8,8 +8,8 @@
     }
   },
   "rules": {
-      "semi": ["error", "always"],
+      "semi": ["warn", "always"],
       "indent": ["error", 2],
-      "react/jsx-uses-react": 1
+      "react/jsx-uses-react": 0
   }
 }

@@ -1,10 +1,12 @@
 import React from 'react';
 import {
-  Editor, EditorState, RichUtils
+  EditorState, RichUtils, convertToRaw
 } from 'draft-js';
+import Editor from "draft-js-plugins-editor";
 import styled from 'styled-components';
 import 'draft-js/dist/Draft.css';
 import ToolBar from './components/tool-bar';
+import addLinkPlugin from './plugins/addLinkPlugin';
 
 const Container = styled.div`
   margin: 20px auto;
@@ -27,7 +29,11 @@ class MyEditor extends React.PureComponent {
 
     this.state = {
       editorState: EditorState.createEmpty()
-    }
+    };
+
+    this.plugins = [
+      addLinkPlugin
+    ];
   }
 
   componentDidMount() {
@@ -37,7 +43,7 @@ class MyEditor extends React.PureComponent {
   setDomEditorRef = ref => this.domEditor = ref;
 
   focus = () => {
-    this.domEditor.focus();
+    setTimeout(() => this.domEditor.focus(), 0);
   }
 
   onChange = (editorState) => {
@@ -48,8 +54,42 @@ class MyEditor extends React.PureComponent {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
   }
 
-  _onLinkClick = () => {
-    console.log('Click on link');
+  addLink = () => {
+    const editorState = this.state.editorState;
+    const selection = editorState.getSelection();
+    const link = window.prompt('Input the link here: ');
+
+    if (!link) {
+      this.onChange(RichUtils.toggleLink(editorState, selection, null));
+      return 'handled';
+    }
+
+    const content = editorState.getCurrentContent();
+    const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link });
+    const newEditorState = EditorState.push(
+      editorState, contentWithEntity, 'create-entity'
+    );
+    const entityKey = contentWithEntity.getLastCreatedEntityKey();
+
+    this.onChange(RichUtils.toggleLink(newEditorState, selection, entityKey));
+    return 'handled';
+  }
+
+  handleKeyCommand = command => {
+    const newState = RichUtils.handleKeyCommand(
+      this.state.editorState,
+      command
+    );
+    if (newState) {
+      this.onChange(newState);
+      return "handled";
+    }
+    return "not-handled";
+  };
+
+  logState = () => {
+    const content = this.state.editorState.getCurrentContent();
+    console.log(convertToRaw(content));
   }
 
   render() {
@@ -57,19 +97,21 @@ class MyEditor extends React.PureComponent {
       <Container>
         <ToolBar
           onBoldClick={this._onBoldClick}
-          onLinkClick={this._onLinkClick}
+          onLinkClick={this.addLink}
         />
 
         <EditorBox>
           <Editor
             editorState={this.state.editorState}
+            handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}
             placeholder="Please input here..."
             ref={this.setDomEditorRef}
+            plugins={this.plugins}
           />
         </EditorBox>
       </Container>
-    )
+    );
   }
 }
 
