@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  EditorState, RichUtils, convertToRaw
+  EditorState, RichUtils, convertToRaw, AtomicBlockUtils
 } from 'draft-js';
 import Editor from "draft-js-plugins-editor";
 import styled from 'styled-components';
 import 'draft-js/dist/Draft.css';
 import ToolBar from './components/tool-bar';
 import addLinkPlugin from './plugins/addLinkPlugin';
+import { mediaBlockRenderer } from './components/entities/mediaBlockRenderer';
 
 const Container = styled.div`
   margin: 20px auto;
@@ -75,6 +76,28 @@ class MyEditor extends React.PureComponent {
     return 'handled';
   }
 
+  addImage = src => {
+    const editorState = this.state.editorState;
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      'image',
+      'IMMUTABLE',
+      { src }
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.set(
+      editorState,
+      { currentContent: contentStateWithEntity },
+      'create-entity'
+    );
+
+    this.setState({
+      editorState: AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ')
+    }, () => {
+      setTimeout(this.focus, 0);
+    });
+  }
+
   handleKeyCommand = command => {
     const newState = RichUtils.handleKeyCommand(
       this.state.editorState,
@@ -108,6 +131,7 @@ class MyEditor extends React.PureComponent {
             placeholder="Please input here..."
             ref={this.setDomEditorRef}
             plugins={this.plugins}
+            blockRendererFn={mediaBlockRenderer}
           />
         </EditorBox>
       </Container>
