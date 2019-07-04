@@ -121,6 +121,7 @@ class MyEditor extends React.PureComponent {
         <ToolBar
           onBoldClick={this._onBoldClick}
           onLinkClick={this.addLink}
+          onImageClick={this.addImage}
         />
 
         <EditorBox>
