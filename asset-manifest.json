@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/draft-editor/static/css/main.34de6062.chunk.css",
+    "main.js": "/draft-editor/static/js/main.22d56d94.chunk.js",
+    "main.js.map": "/draft-editor/static/js/main.22d56d94.chunk.js.map",
+    "runtime~main.js": "/draft-editor/static/js/runtime~main.7721208c.js",
+    "runtime~main.js.map": "/draft-editor/static/js/runtime~main.7721208c.js.map",
+    "static/css/2.a17ebd6e.chunk.css": "/draft-editor/static/css/2.a17ebd6e.chunk.css",
+    "static/js/2.03b89e43.chunk.js": "/draft-editor/static/js/2.03b89e43.chunk.js",
+    "static/js/2.03b89e43.chunk.js.map": "/draft-editor/static/js/2.03b89e43.chunk.js.map",
+    "index.html": "/draft-editor/index.html",
+    "precache-manifest.4e71c8b134f52fa13f071591e2582071.js": "/draft-editor/precache-manifest.4e71c8b134f52fa13f071591e2582071.js",
+    "service-worker.js": "/draft-editor/service-worker.js",
+    "static/css/2.a17ebd6e.chunk.css.map": "/draft-editor/static/css/2.a17ebd6e.chunk.css.map",
+    "static/css/main.34de6062.chunk.css.map": "/draft-editor/static/css/main.34de6062.chunk.css.map"
+  }
+}
