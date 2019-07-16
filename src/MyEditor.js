@@ -33,7 +33,7 @@ class MyEditor extends React.PureComponent {
     };
 
     this.plugins = [
-      addLinkPlugin
+      addLinkPlugin,
     ];
   }
 
@@ -132,7 +132,7 @@ class MyEditor extends React.PureComponent {
             placeholder="Please input here..."
             ref={this.setDomEditorRef}
             plugins={this.plugins}
-            blockRendererFn={mediaBlockRenderer}
+            blockRendererFn={(block) => mediaBlockRenderer(block, this.onChange, this.state.editorState)}
           />
         </EditorBox>
       </Container>
