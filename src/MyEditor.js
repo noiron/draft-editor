@@ -111,9 +111,11 @@ class MyEditor extends React.PureComponent {
       focusOffset: block.getLength(),
     });
 
+    // 重写 entity 数据，将其从 block 中移除，防止这个 entity 还被其它的 block 引用
     const contentStateWithoutEntity = Modifier.applyEntity(contentState, selectionOfAtomicBlock, null);
     const editorStateWithoutEntity = EditorState.push(editorState, contentStateWithoutEntity, 'apply-entity');
 
+    // 移除 block
     const contentStateWithoutBlock = Modifier.removeRange(contentStateWithoutEntity, selectionOfAtomicBlock, 'backward');
     const newEditorState =  EditorState.push(editorStateWithoutEntity, contentStateWithoutBlock, 'remove-range',);
 

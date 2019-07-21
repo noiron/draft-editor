@@ -14,7 +14,7 @@ yarn start
 
 - [Draft Editor 在线预览](http://www.wukai.me/draft-editor/)
 
-## 待实现功能
+## 实现功能
 
 - 文本加粗
 - 插入图片
