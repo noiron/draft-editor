@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  EditorState, RichUtils, convertToRaw, AtomicBlockUtils
+  EditorState, RichUtils, convertToRaw, AtomicBlockUtils, Modifier
 } from 'draft-js';
 import Editor from "draft-js-plugins-editor";
 import styled from 'styled-components';
@@ -98,6 +98,28 @@ class MyEditor extends React.PureComponent {
     });
   }
 
+  deleteImage = (block) => {
+    const editorState = this.state.editorState;
+    const contentState = editorState.getCurrentContent();
+    const key = block.getKey();
+
+    const selection = editorState.getSelection();
+    const selectionOfAtomicBlock = selection.merge({
+      anchorKey: key,
+      anchorOffset: 0,
+      focusKey: key,
+      focusOffset: block.getLength(),
+    });
+
+    const contentStateWithoutEntity = Modifier.applyEntity(contentState, selectionOfAtomicBlock, null);
+    const editorStateWithoutEntity = EditorState.push(editorState, contentStateWithoutEntity, 'apply-entity');
+
+    const contentStateWithoutBlock = Modifier.removeRange(contentStateWithoutEntity, selectionOfAtomicBlock, 'backward');
+    const newEditorState =  EditorState.push(editorStateWithoutEntity, contentStateWithoutBlock, 'remove-range',);
+
+    this.onChange(newEditorState);
+  }
+
   handleKeyCommand = command => {
     const newState = RichUtils.handleKeyCommand(
       this.state.editorState,
@@ -132,7 +154,9 @@ class MyEditor extends React.PureComponent {
             placeholder="Please input here..."
             ref={this.setDomEditorRef}
             plugins={this.plugins}
-            blockRendererFn={(block) => mediaBlockRenderer(block, this.onChange, this.state.editorState)}
+            blockRendererFn={(block) => mediaBlockRenderer(block, { 
+              deleteImage: this.deleteImage
+            })}
           />
         </EditorBox>
       </Container>

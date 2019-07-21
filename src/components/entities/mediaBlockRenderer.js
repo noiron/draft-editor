@@ -31,8 +31,8 @@ const Image = props => {
   if (!!props.src) {
     return (
       <ImageBox>
-        <img src={props.src} alt="" className="img-media" onClick={() => console.log(2)}/>
-        <div className="close-icon" onClick={props.handleClick}>
+        <img src={props.src} alt="" className="img-media" />
+        <div className="close-icon" onClick={props.handleDelete}>
           <img src={close_icon} />
         </div>
       </ImageBox>
@@ -53,36 +53,12 @@ const Media = props => {
 
   if (type === 'image') {
     const key = props.block.getKey();
-    const currentContentState = props.contentState;
-    const currentEditorState = props.blockProps.editorState;
-
-    const selection = currentEditorState.getSelection();
-    const selectionOfAtomicBlock = selection.merge({
-      anchorKey: key,
-      anchorOffset: 0,
-      focusKey: key,
-      focusOffset: props.block.getLength(),
-    });
-
-    const contentStateWithoutEntity = Modifier.applyEntity(
-      currentContentState, selectionOfAtomicBlock, null
-    );
-    const editorStateWithoutEntity = EditorState.push(
-      currentEditorState, contentStateWithoutEntity, 'apply-entity'
-    );
-
-    const contentStateWithoutBlock = Modifier.removeRange(
-      contentStateWithoutEntity, selectionOfAtomicBlock, 'backward'
-    );
-    const newEditorState =  EditorState.push(
-      editorStateWithoutEntity, contentStateWithoutBlock, 'remove-range'
-    );
 
     media = <Image
       src={src} 
       blockKey={key}
-      handleClick={() => {
-        props.blockProps.onChange(newEditorState);
+      handleDelete={() => {
+        props.blockProps.deleteImage(props.block);
       }}
     />;
   }
@@ -91,15 +67,14 @@ const Media = props => {
 };
 
 
-export const mediaBlockRenderer = (block, onChange, editorState) => {
+export const mediaBlockRenderer = (block, { deleteImage }) => {
 
   if (block.getType() === 'atomic') {
     return {
       component: Media,
       editable: false,
       props: {
-        onChange,
-        editorState
+        deleteImage
       },
     };
   }
