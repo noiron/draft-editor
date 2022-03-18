@@ -27,6 +27,7 @@ const ToolBar = props => {
 
   return (
     <BarBox>
+      <Button onClick={() => {}}><Icons.header /></Button>
       <Button onClick={props.onBoldClick}><Icons.bold /></Button>
       <Button onClick={props.onLinkClick}><Icons.link /></Button>
       <Button>
